@@ -96,10 +96,24 @@
             background-repeat: no-repeat;
             background-position: right 1rem center;
             background-size: 1em;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
         }
 
         .light-mode select {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #1e293b;
+        }
+
+        select option {
+            background-color: #151b28;
+            color: #fff;
+        }
+
+        .light-mode select option {
+            background-color: #fff;
+            color: #1e293b;
         }
     </style>
 </head>
@@ -160,8 +174,6 @@
             </div>
         </div>
 
-        <div class="mt-auto p-5 bg-white/5 rounded-2xl border border-white/5 text-[11px] text-gray-500 leading-relaxed italic">
-            "Dashboard metrics are dynamically sourced based on selected month/year links from the master registry."
         </div>
     </aside>
 
@@ -193,9 +205,9 @@
                             <div class="bg-indigo-500 h-full" style="width: 100%"></div>
                         </div>
                     </div>
-                    <div class="metric-card p-8 rounded-[2rem]">
+                    <div class="metric-card p-8 rounded-[2rem] overflow-hidden">
                         <p class="text-[10px] font-black opacity-50 uppercase tracking-[0.3em] mb-4">Male/Female</p>
-                        <h3 id="hrGender" class="text-5xl font-bold mb-2">0:0</h3>
+                        <h3 id="hrGender" class="text-3xl font-bold mb-2 truncate">0:0</h3>
                         <p id="hrGenderSub" class="text-xs opacity-50 font-medium tracking-tight">Distribution</p>
                     </div>
                     <div class="metric-card p-8 rounded-[2rem]">
@@ -436,7 +448,9 @@
                 '5+ Yrs': data.filter(e => { const t = getTenure(e); return !isNaN(t) && t >= 5; }).length
             };
             renderChart('hrTenureBar', 'bar', tenureStats, 'Employees', '#10b981');
-            renderChart('hrPhaseChart', 'radar', countBy(data, 'Phase'), 'Phases', '#f59e0b');
+            const phaseData = countBy(data, 'Phase');
+            const phaseType = Object.keys(phaseData).length > 2 ? 'radar' : 'bar';
+            renderChart('hrPhaseChart', phaseType, phaseData, 'Phases', '#f59e0b');
         }
 
         function renderAttr(data, activeCount) {
