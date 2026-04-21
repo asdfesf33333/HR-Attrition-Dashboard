@@ -320,10 +320,22 @@
                 const wb = XLSX.read(ab);
                 
                 const linksSheet = wb.Sheets['Links'] || wb.Sheets[wb.SheetNames[0]];
-                linksData = XLSX.utils.sheet_to_json(linksSheet);
+                const rawData = XLSX.utils.sheet_to_json(linksSheet);
+                
+                // Robust Column Mapping
+                linksData = rawData.map(row => {
+                    const mapped = {};
+                    Object.keys(row).forEach(key => {
+                        const k = key.trim().toLowerCase();
+                        if (k === 'year' || k.includes('year')) mapped.Year = row[key];
+                        if (k === 'month' || k.includes('month')) mapped.Month = row[key];
+                        if (k === 'link' || k.includes('link')) mapped.Link = row[key];
+                    });
+                    return mapped;
+                }).filter(l => l.Year && l.Month && l.Link);
                 
                 // Populate Years
-                const years = [...new Set(linksData.map(l => l.Year))].sort((a, b) => b - a);
+                const years = [...new Set(linksData.map(l => l.Year))].filter(Boolean).sort((a, b) => b - a);
                 const yearSelect = document.getElementById('yearSelect');
                 years.forEach(y => {
                     const opt = document.createElement('option');
