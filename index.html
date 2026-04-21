@@ -32,8 +32,8 @@
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
+            background-color: var(--bg-color) !important; 
+            color: var(--text-color) !important; 
             overflow: hidden; 
             transition: background-color 0.3s, color 0.3s;
         }
@@ -103,7 +103,7 @@
         }
     </style>
 </head>
-<body class="bg-[#0c1017]">
+<body class="transition-colors duration-300">
 
     <!-- Sidebar -->
     <aside class="fixed left-0 top-0 w-80 h-screen glass border-r border-white/5 p-8 z-50 flex flex-col gap-10" style="border-right-color: var(--sidebar-border)">
@@ -302,7 +302,7 @@
     </main>
 
     <script>
-        const ENCODED_URL = "aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMWVSY3dra2lUZ3ZtWHJyU3k3TGdnQ2had3pFLXNlRFdTRzBQbGtoNHRCOC9leHBvcnQ/Zm9ybWF0PXhsc3g=";
+        const ENCODED_URL = "aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMWVSY3dra2lUZ3h2bVhyclN5N0xnZ0NoWnd6RS1zZURXU0cwUGxraDR0QjgvZXHBvcnQ/Zm9ybWF0PXhsc3g=";
         let linksData = [];
         let hrData = [];
         let exitData = [];
