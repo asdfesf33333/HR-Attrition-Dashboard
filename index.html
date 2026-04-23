@@ -582,21 +582,45 @@
                 y1: { position: 'right', grid: { display: false }, ticks: { color: '#94a3b8' } }
             });
 
-            // Attrition Trend Chart: Churn Rate
+            // Attrition Trend Chart: Combined Bar (Exits) + Line (Churn Rate)
             renderTrendChart('atTrendChart', labels, [
+                {
+                    label: 'Total Exits',
+                    data: trendData.map(t => t.exits),
+                    type: 'bar',
+                    backgroundColor: 'rgba(244, 63, 94, 0.4)',
+                    borderColor: '#f43f5e',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    datalabels: { display: true }
+                },
                 {
                     label: 'Churn Rate (%)',
                     data: churnRates,
                     type: 'line',
-                    borderColor: '#f43f5e',
-                    backgroundColor: 'rgba(244, 63, 94, 0.1)',
-                    fill: true,
+                    borderColor: '#fb7185',
+                    pointBackgroundColor: '#fb7185',
                     tension: 0.4,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    datalabels: { display: true, formatter: (v) => v + '%' }
+                    fill: false,
+                    yAxisID: 'y1',
+                    datalabels: { 
+                        display: true, 
+                        align: 'top',
+                        anchor: 'end',
+                        formatter: (v) => v + '%' 
+                    }
                 }
-            ], {}, 'Rate (%)');
+            ], {
+                y1: { 
+                    position: 'right', 
+                    grid: { display: false }, 
+                    ticks: { 
+                        color: '#94a3b8',
+                        callback: (v) => v + '%'
+                    },
+                    title: { display: true, text: 'Rate (%)', color: '#94a3b8' }
+                }
+            }, 'Exits');
         }
 
         function renderTrendChart(id, labels, datasets, extraScales = {}, yTitle = 'Headcount') {
