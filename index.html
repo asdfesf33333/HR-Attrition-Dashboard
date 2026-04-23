@@ -538,7 +538,7 @@
             const labels = trendData.map(t => t.label);
             const headcounts = trendData.map(t => t.headcount);
             const newJoinees = trendData.map(t => t.newJoinees);
-            const churnRates = trendData.map(t => ((t.exits / (t.headcount || 1)) * 100).toFixed(1));
+            const churnRates = trendData.map(t => parseFloat(((t.exits / (t.headcount || 1)) * 100).toFixed(1)));
             
             const growthRates = trendData.map((t, i) => {
                 if (i === 0) return 0;
@@ -587,17 +587,19 @@
                 {
                     label: 'Churn Rate (%)',
                     data: churnRates,
+                    type: 'line',
                     borderColor: '#f43f5e',
                     backgroundColor: 'rgba(244, 63, 94, 0.1)',
                     fill: true,
                     tension: 0.4,
                     pointRadius: 6,
-                    pointHoverRadius: 8
+                    pointHoverRadius: 8,
+                    datalabels: { display: true, formatter: (v) => v + '%' }
                 }
-            ]);
+            ], {}, 'Rate (%)');
         }
 
-        function renderTrendChart(id, labels, datasets, extraScales = {}) {
+        function renderTrendChart(id, labels, datasets, extraScales = {}, yTitle = 'Headcount') {
             if (charts[id]) charts[id].destroy();
             const canvas = document.getElementById(id);
             if (!canvas) return;
@@ -621,9 +623,9 @@
                             offset: -2,
                             font: { weight: 'bold', size: 10 },
                             display: function(context) {
-                                return context.dataset.type === 'bar'; // Only show for bars
+                                return context.dataset.datalabels?.display ?? (context.dataset.type === 'bar');
                             },
-                            formatter: (val) => Math.round(val)
+                            formatter: (val, ctx) => ctx.dataset.datalabels?.formatter ? ctx.dataset.datalabels.formatter(val) : Math.round(val)
                         }
                     },
                     scales: {
@@ -631,7 +633,7 @@
                             beginAtZero: true, 
                             grid: { color: gridColor }, 
                             ticks: { color: textColor, font: { size: 10 } },
-                            title: { display: true, text: 'Headcount', color: textColor }
+                            title: { display: true, text: yTitle, color: textColor }
                         },
                         x: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } },
                         ...extraScales
